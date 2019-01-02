@@ -103,6 +103,7 @@ namespace AppDynamics.dotnetCore.Extension
                         long memoryUsed = toMonitor.WorkingSet64 /1000;
                         long memoryCommitted = toMonitor.PeakWorkingSet64/1000;
                         int threadCount = toMonitor.Threads.Count;
+                        int handleCount = toMonitor.HandleCount;
                         var machineName = System.Environment.MachineName;
 
 
@@ -122,9 +123,10 @@ namespace AppDynamics.dotnetCore.Extension
                                 metricsList.Add(CreateMetricPackage($"Custom Metrics|Nodes|{machineName}|Memory|{processToReport}|Memory Heap - Gen 1 Usage", collectData.GenerationSize1)); 
                                 metricsList.Add(CreateMetricPackage($"Custom Metrics|Nodes|{machineName}|Memory|{processToReport}|Memory Heap - Gen 2 Usage", collectData.GenerationSize2));
                                 metricsList.Add(CreateMetricPackage($"Custom Metrics|Nodes|{machineName}|Memory|{processToReport}|Large Object Heap - Current Usage", collectData.GenerationSize3));
-                                metricsList.Add(CreateMetricPackage($"Custom Metrics|Nodes|{machineName}|Memory|{processToReport}|Current Usage", memoryUsed));
-                                metricsList.Add(CreateMetricPackage($"Custom Metrics|Nodes|{machineName}|Memory|{processToReport}|Current Committed", memoryCommitted));
-                                metricsList.Add(CreateMetricPackage($"Custom Metrics|Nodes|{machineName}|Process|{processToReport}|Thread Count", threadCount));
+                                //metricsList.Add(CreateMetricPackage($"Custom Metrics|Nodes|{machineName}|Memory|{processToReport}|Current Usage", memoryUsed));
+                                //metricsList.Add(CreateMetricPackage($"Custom Metrics|Nodes|{machineName}|Memory|{processToReport}|Current Committed", memoryCommitted));
+                                //metricsList.Add(CreateMetricPackage($"Custom Metrics|Nodes|{machineName}|Process|{processToReport}|Thread Count", threadCount));
+                                //metricsList.Add(CreateMetricPackage($"Custom Metrics|Nodes|{machineName}|Process|{processToReport}|Handles", handleCount));
 
                             }
                             if (console)
@@ -133,9 +135,10 @@ namespace AppDynamics.dotnetCore.Extension
                                 Console.WriteLine($"name=Custom Metrics|Nodes|{machineName}|Memory|{processToReport}|Memory Heap - Gen 1 Usage,aggregator=OBSERVATION,time-rollup=AVERAGE,cluster-rollup=INDIVIDUAL,value={collectData.GenerationSize1}");
                                 Console.WriteLine($"name=Custom Metrics|Nodes|{machineName}|Memory|{processToReport}|Memory Heap - Gen 2 Usage,aggregator=OBSERVATION,time-rollup=AVERAGE,cluster-rollup=INDIVIDUAL,value={collectData.GenerationSize2}");
                                 Console.WriteLine($"name=Custom Metrics|Nodes|{machineName}|Memory|{processToReport}|Large Object Heap - Current Usage,aggregator=OBSERVATION,time-rollup=AVERAGE,cluster-rollup=INDIVIDUAL,value={collectData.GenerationSize3}");
-                                Console.WriteLine($"name=Custom Metrics|Nodes|{machineName}|Memory|{processToReport}|Current Usage,aggregator=OBSERVATION,time-rollup=AVERAGE,cluster-rollup=INDIVIDUAL,value={memoryUsed}");
-                                Console.WriteLine($"name=Custom Metrics|Nodes|{machineName}|Memory|{processToReport}|Current Committed,aggregator=OBSERVATION,time-rollup=AVERAGE,cluster-rollup=INDIVIDUAL,value={memoryCommitted}");
-                                Console.WriteLine($"name=Custom Metrics|Nodes|{machineName}|Process|{processToReport}|Thread Count,aggregator=OBSERVATION,time-rollup=AVERAGE,cluster-rollup=INDIVIDUAL,value={threadCount}");
+                                // Console.WriteLine($"name=Custom Metrics|Nodes|{machineName}|Memory|{processToReport}|Current Usage,aggregator=OBSERVATION,time-rollup=AVERAGE,cluster-rollup=INDIVIDUAL,value={memoryUsed}");
+                                // Console.WriteLine($"name=Custom Metrics|Nodes|{machineName}|Memory|{processToReport}|Current Committed,aggregator=OBSERVATION,time-rollup=AVERAGE,cluster-rollup=INDIVIDUAL,value={memoryCommitted}");
+                                // Console.WriteLine($"name=Custom Metrics|Nodes|{machineName}|Process|{processToReport}|Thread Count,aggregator=OBSERVATION,time-rollup=AVERAGE,cluster-rollup=INDIVIDUAL,value={threadCount}");
+                                // Console.WriteLine($"name=Custom Metrics|Nodes|{machineName}|Process|{processToReport}|Handles,aggregator=OBSERVATION,time-rollup=AVERAGE,cluster-rollup=INDIVIDUAL,value={handleCount}");
                             }
                         }
 

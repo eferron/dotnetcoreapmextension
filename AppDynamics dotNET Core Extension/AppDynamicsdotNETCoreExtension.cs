@@ -29,7 +29,7 @@ namespace AppDynamics.dotnetCore.Extension
         protected override void OnStart(string[] args)
         {
             Timer timer = new Timer();
-            timer.Interval = 15000;
+            timer.Interval = Double.Parse(ConfigurationManager.AppSettings["Interval"]);
             timer.Elapsed += new ElapsedEventHandler(this.OnTimer);
             timer.Enabled = true;
             
