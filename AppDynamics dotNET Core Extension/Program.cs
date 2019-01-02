@@ -38,6 +38,7 @@ namespace AppDynamics.dotnetCore.Extension
 
                 Console.ReadLine();
 
+                //This code would be needed if we ran the code as a service
                 //ServiceBase[] ServicesToRun;
                 //ServicesToRun = new ServiceBase[]
                 //{
