@@ -1,0 +1,18 @@
+<monitor>
+    <name>DotnetCoreMetrics</name>
+    <type>managed</type>
+    <description>CORE CLR Memory Metrics</description>
+    <monitor-configuration>
+    </monitor-configuration>
+        <monitor-run-task>
+           <!--  Edit execution-style as needed. -->
+			<execution-style>continuous</execution-style>	   
+           <name>Run</name>
+           <type>executable</type>
+           <task-arguments></task-arguments>
+            <executable-task>
+                <type>file</type>
+                 <file os-type="windows">dotnetcoreapmextension.exe</file>
+           </executable-task>
+         </monitor-run-task>
+</monitor>
