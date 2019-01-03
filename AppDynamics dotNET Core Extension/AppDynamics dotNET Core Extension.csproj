@@ -126,7 +126,12 @@
     <Compile Include="AppDynamicsdotNETCoreExtension.Designer.cs">
       <DependentUpon>AppDynamicsdotNETCoreExtension.cs</DependentUpon>
     </Compile>
+    <Compile Include="AppPoolConfig.cs" />
+    <Compile Include="ConfigTools.cs" />
     <Compile Include="EventMonitor.cs" />
+    <Compile Include="IISAdminTools.cs" />
+    <Compile Include="LoggingHandler.cs" />
+    <Compile Include="MetricData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

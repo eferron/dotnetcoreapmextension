@@ -4,17 +4,12 @@ using Microsoft.Diagnostics.Tracing.Parsers.Clr;
 using Microsoft.Diagnostics.Tracing.Session;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reactive.Linq;
-using Microsoft.Web.Administration;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace AppDynamics.dotnetCore.Extension
 {
@@ -40,22 +35,9 @@ namespace AppDynamics.dotnetCore.Extension
 
         public EventMonitor(){ }
 
-        public void Log(string msg)
-        {
-            string logPath = ConfigurationManager.AppSettings["DebugLogPath"];
-            string debugLevel = ConfigurationManager.AppSettings["DebugLevel"].ToUpperInvariant();
-            if (debugLevel.ToUpper() == "DEBUG")
-            {
-                using (logWriter = new StreamWriter(logPath, true))
-                {
-                    logWriter.WriteLine($"{DateTime.Now.ToString("mm/dd/yyy HH:mm")}\t{msg}");
-                }
-            }
-        }
-
         private MetricData CreateMetricPackage(string metric, long value)
         {
-            Log($"Creating Metric Package {metric}={value}");
+            Program.Log($"Creating Metric Package {metric}={value}");
             return new MetricData() { aggregatorType = "AVERAGE", metricName = metric, value = value };
         }
 
@@ -65,13 +47,13 @@ namespace AppDynamics.dotnetCore.Extension
             monitoredApps = ConfigTools.GetConfiguredApps();
             console = Boolean.Parse(ConfigurationManager.AppSettings["ConsoleOutput"]);
             api = Boolean.Parse(ConfigurationManager.AppSettings["APIOutput"]);
-            Log($"Configuration console:{console}, api:{api}");
+            Program.Log($"Configuration console:{console}, api:{api}");
 
         }
 
         public void Run() //List<string> monitoredAppPools, List<string> monitoredApps, bool console, bool api)
         {
-            Log("Run method executed");
+            Program.Log("Run method executed");
             started = true;
 
             using (var userSession = new TraceEventSession("ObserveGCAllocs"))
@@ -254,13 +236,13 @@ namespace AppDynamics.dotnetCore.Extension
                         using (HttpResponseMessage response = await client.PostAsJsonAsync(@"api/v1/metrics", myMetrics.ToArray()))
                         {
                             string responseBody = await response.Content.ReadAsStringAsync();
-                            Log($"Status Code:{response.StatusCode}\tResponse Body: {responseBody}");
+                            Program.Log($"Status Code:{response.StatusCode}\tResponse Body: {responseBody}");
                       
                             foreach (var item in myMetrics)
                             {
-                                Log($"Metrics sent to API : {item.metricName} \nValue : {item.value}");
+                            Program.Log($"Metrics sent to API : {item.metricName} \nValue : {item.value}");
                             }
-                            Log($"Sent {myMetrics.Count} metrics");
+                            Program.Log($"Sent {myMetrics.Count} metrics");
 
                         }
                     }
@@ -268,7 +250,7 @@ namespace AppDynamics.dotnetCore.Extension
                 catch (Exception ex)
                 {
                     if (DEBUG_LEVEL == "INFO" | DEBUG_LEVEL == "DEBUG")
-                        Log($"Error : {ex.Message}");
+                        Program.Log($"Error : {ex.Message}");
                 }
 
             }
@@ -277,41 +259,6 @@ namespace AppDynamics.dotnetCore.Extension
                 WritetoAppD(metrics);
             }
 
-
-            #region Console CtrlC handling
-            private bool s_bCtrlCExecuted;
-            private ConsoleCancelEventHandler s_CtrlCHandler;
-            /// <summary>
-            /// This implementation allows one to call this function multiple times during the
-            /// execution of a console application. The CtrlC handling is disabled when Ctrl-C 
-            /// is typed, one will need to call this method again to re-enable it.
-            /// </summary>
-            /// <param name="action"></param>
-            private void SetupCtrlCHandler(Action action)
-            {
-                s_bCtrlCExecuted = false;
-                // uninstall previous handler
-                if (s_CtrlCHandler != null)
-                    Console.CancelKeyPress -= s_CtrlCHandler;
-
-                s_CtrlCHandler =
-                    (object sender, ConsoleCancelEventArgs cancelArgs) =>
-                    {
-                        if (!s_bCtrlCExecuted)
-                        {
-                            s_bCtrlCExecuted = true;    // ensure non-reentrant
-
-                            Log("Stopping monitor");
-
-                            action();                   // execute custom action
-
-                        // terminate normally (i.e. when the monitoring tasks complete b/c we've stopped the sessions)
-                        cancelArgs.Cancel = true;
-                        }
-                    };
-                Console.CancelKeyPress += s_CtrlCHandler;
-            }            
     }
 
 }
-#endregion
